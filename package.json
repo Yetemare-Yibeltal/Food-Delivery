@@ -1,25 +1,45 @@
-
 {
-  "name": "yene-delivery",
+  "name": "@yene/frontend",
   "version": "1.0.0",
   "private": true,
-  "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=9.0.0"
-  },
   "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
-    "type-check": "turbo type-check",
-    "test": "turbo test",
-    "clean": "turbo clean && rm -rf node_modules"
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@tanstack/react-query": "^5.62.16",
+    "@tanstack/react-query-devtools": "^5.62.16",
+    "zustand": "^5.0.3",
+    "framer-motion": "^11.15.0",
+    "three": "^0.171.0",
+    "@react-three/fiber": "^8.17.10",
+    "@react-three/drei": "^9.120.4",
+    "axios": "^1.7.9",
+    "zod": "^3.24.1",
+    "react-hook-form": "^7.54.2",
+    "@hookform/resolvers": "^3.9.1",
+    "lucide-react": "^0.469.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0",
+    "next-themes": "^0.4.4",
+    "sonner": "^1.7.1",
+    "@yene/shared": "workspace:*"
   },
   "devDependencies": {
-    "turbo": "^2.9.18",
-    "prettier": "^3.4.2",
-    "typescript": "^5.7.3"
-  },
-  "packageManager": "pnpm@11.8.0"
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.3",
+    "@types/react-dom": "^19.0.2",
+    "@types/three": "^0.171.0",
+    "typescript": "^5.7.3",
+    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49"
+  }
 }
