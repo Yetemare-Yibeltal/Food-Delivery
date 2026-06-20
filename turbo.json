@@ -1,4 +1,3 @@
-cat > turbo.json << 'EOF'
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
@@ -26,4 +25,3 @@ cat > turbo.json << 'EOF'
     }
   }
 }
-EOF
