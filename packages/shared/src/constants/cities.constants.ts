@@ -3,21 +3,21 @@ export const ETHIOPIAN_CITIES = [
     id: 'addis_ababa',
     name: 'Addis Ababa',
     nameAm: 'አዲስ አበባ',
-    coordinates: { lat: 9.0192, lng: 38.7525 },
+    coordinates: { lat: 9.0222, lng: 38.7469 },
     isActive: true,
   },
   {
     id: 'adama',
     name: 'Adama',
     nameAm: 'አዳማ',
-    coordinates: { lat: 8.5414, lng: 39.2699 },
+    coordinates: { lat: 8.54, lng: 39.27 },
     isActive: true,
   },
   {
     id: 'hawassa',
     name: 'Hawassa',
-    nameAm: 'ሐዋሳ',
-    coordinates: { lat: 7.0621, lng: 38.4768 },
+    nameAm: 'ሀዋሳ',
+    coordinates: { lat: 7.05, lng: 38.4667 },
     isActive: true,
   },
   {
@@ -43,5 +43,4 @@ export const ETHIOPIAN_CITIES = [
   },
 ] as const;
 
-export type EthiopianCity = (typeof ETHIOPIAN_CITIES)[number];
-export type CityId = EthiopianCity['id'];
+export type CityId = (typeof ETHIOPIAN_CITIES)[number]['id'];
