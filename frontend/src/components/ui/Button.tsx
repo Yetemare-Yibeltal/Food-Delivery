@@ -227,19 +227,20 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = 'Button';
 
 // ─── Icon Button Component ────────────────────────────────────────────────────
-export const IconButton = React.forwardRef
-  HTMLButtonElement,
-  Omit<ButtonProps, 'leftIcon' | 'rightIcon'> & {
-    icon: React.ReactNode;
-    'aria-label': string;
-  }
->(({ icon, size = 'icon', ...props }, ref) => {
-  return (
-    <Button ref={ref} size={size} {...props}>
-      {icon}
-    </Button>
-  );
-});
+interface IconButtonProps extends Omit<ButtonProps, 'leftIcon' | 'rightIcon'> {
+  icon: React.ReactNode;
+  'aria-label': string;
+}
+
+export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  ({ icon, size = 'icon', ...props }, ref) => {
+    return (
+      <Button ref={ref} size={size} {...props}>
+        {icon}
+      </Button>
+    );
+  },
+);
 
 IconButton.displayName = 'IconButton';
 
