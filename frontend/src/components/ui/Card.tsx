@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { cn } from '@/lib/cn';
 import { cardHoverVariants } from '@/lib/animations/variants';
 
-// ─── Card Variants ────────────────────────────────────────────────────────────
-const cardVariants = {
+// ─── Card Style Variants ──────────────────────────────────────────────────────
+const cardStyles = {
   default: cn(
     'bg-card text-card-foreground',
     'border border-border',
@@ -41,16 +41,7 @@ const cardVariants = {
   ),
 };
 
-// ─── Card Props ───────────────────────────────────────────────────────────────
-export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: keyof typeof cardVariants;
-  hoverable?: boolean;
-  clickable?: boolean;
-  animate?: boolean;
-  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  fullHeight?: boolean;
-}
-
+// ─── Padding Sizes ────────────────────────────────────────────────────────────
 const paddingSizes = {
   none: 'p-0',
   sm: 'p-3',
@@ -58,6 +49,16 @@ const paddingSizes = {
   lg: 'p-6',
   xl: 'p-8',
 };
+
+// ─── Card Props ───────────────────────────────────────────────────────────────
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: keyof typeof cardStyles;
+  hoverable?: boolean;
+  clickable?: boolean;
+  animate?: boolean;
+  padding?: keyof typeof paddingSizes;
+  fullHeight?: boolean;
+}
 
 // ─── Card Component ───────────────────────────────────────────────────────────
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -78,18 +79,19 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ) => {
     const isInteractive = hoverable || clickable || Boolean(onClick);
 
+    const classes = cn(
+      cardStyles[variant],
+      paddingSizes[padding],
+      fullHeight && 'h-full',
+      isInteractive && 'cursor-pointer transition-all duration-300',
+      className,
+    );
+
     if (animate || isInteractive) {
       return (
         <motion.div
           ref={ref}
-          className={cn(
-            cardVariants[variant],
-            paddingSizes[padding],
-            fullHeight && 'h-full',
-            isInteractive && 'cursor-pointer',
-            isInteractive && 'transition-all duration-300',
-            className,
-          )}
+          className={classes}
           variants={isInteractive ? cardHoverVariants : undefined}
           initial={isInteractive ? 'initial' : undefined}
           whileHover={isInteractive ? 'hover' : undefined}
@@ -103,30 +105,20 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     }
 
     return (
-      <div
-        ref={ref}
-        className={cn(
-          cardVariants[variant],
-          paddingSizes[padding],
-          fullHeight && 'h-full',
-          className,
-        )}
-        onClick={onClick}
-        {...props}
-      >
+      <div ref={ref} className={classes} onClick={onClick} {...props}>
         {children}
       </div>
     );
   },
 );
-
 Card.displayName = 'Card';
 
-// ─── Card Header ──────────────────────────────────────────────────────────────
+// ─── Card Header Props ────────────────────────────────────────────────────────
 export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   action?: React.ReactNode;
 }
 
+// ─── Card Header ──────────────────────────────────────────────────────────────
 export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className, action, children, ...props }, ref) => (
     <div
@@ -139,87 +131,90 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       {...props}
     >
       <div className="flex-1 min-w-0">{children}</div>
-      {action && (
-        <div className="ml-4 flex-shrink-0">{action}</div>
-      )}
+      {action && <div className="ml-4 flex-shrink-0">{action}</div>}
     </div>
   ),
 );
-
 CardHeader.displayName = 'CardHeader';
 
-// ─── Card Title ───────────────────────────────────────────────────────────────
-export const CardTitle = React.forwardRef
-  HTMLHeadingElement,
-  React.HTMLAttributes<HTMLHeadingElement> & { as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' }
->(({ className, as: Tag = 'h3', children, ...props }, ref) => (
-  <Tag
-    ref={ref}
-    className={cn(
-      'text-lg font-semibold leading-tight tracking-tight text-foreground',
-      className,
-    )}
-    {...props}
-  >
-    {children}
-  </Tag>
-));
+// ─── Card Title Props ─────────────────────────────────────────────────────────
+interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+}
 
+// ─── Card Title ───────────────────────────────────────────────────────────────
+export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
+  ({ className, as: Tag = 'h3', children, ...props }, ref) => (
+    <Tag
+      ref={ref}
+      className={cn(
+        'text-lg font-semibold leading-tight tracking-tight text-foreground',
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </Tag>
+  ),
+);
 CardTitle.displayName = 'CardTitle';
 
 // ─── Card Description ─────────────────────────────────────────────────────────
 export const CardDescription = React.forwardRef
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn('text-sm text-muted-foreground mt-1', className)}
-    {...props}
-  />
-));
-
+>(
+  ({ className, ...props }, ref) => (
+    <p
+      ref={ref}
+      className={cn('text-sm text-muted-foreground mt-1', className)}
+      {...props}
+    />
+  ),
+);
 CardDescription.displayName = 'CardDescription';
 
 // ─── Card Content ─────────────────────────────────────────────────────────────
 export const CardContent = React.forwardRef
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('px-6 pb-6', className)}
-    {...props}
-  />
-));
-
+>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn('px-6 pb-6', className)}
+      {...props}
+    />
+  ),
+);
 CardContent.displayName = 'CardContent';
 
-// ─── Card Footer ──────────────────────────────────────────────────────────────
-export const CardFooter = React.forwardRef
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { justify?: 'start' | 'end' | 'between' | 'center' }
->(({ className, justify = 'start', ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      'flex items-center px-6 py-4',
-      'border-t border-border',
-      {
-        'justify-start': justify === 'start',
-        'justify-end': justify === 'end',
-        'justify-between': justify === 'between',
-        'justify-center': justify === 'center',
-      },
-      className,
-    )}
-    {...props}
-  />
-));
+// ─── Card Footer Props ────────────────────────────────────────────────────────
+interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+  justify?: 'start' | 'end' | 'between' | 'center';
+}
 
+// ─── Card Footer ──────────────────────────────────────────────────────────────
+export const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
+  ({ className, justify = 'start', ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        'flex items-center px-6 py-4',
+        'border-t border-border',
+        justify === 'start' && 'justify-start',
+        justify === 'end' && 'justify-end',
+        justify === 'between' && 'justify-between',
+        justify === 'center' && 'justify-center',
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
 CardFooter.displayName = 'CardFooter';
 
-// ─── Card Image ───────────────────────────────────────────────────────────────
+// ─── Card Image Props ─────────────────────────────────────────────────────────
 export interface CardImageProps {
   src: string;
   alt: string;
@@ -230,6 +225,7 @@ export interface CardImageProps {
   overlayContent?: React.ReactNode;
 }
 
+// ─── Card Image ───────────────────────────────────────────────────────────────
 export const CardImage = ({
   src,
   alt,
@@ -274,7 +270,7 @@ export const CardImage = ({
   );
 };
 
-// ─── Stats Card Component ─────────────────────────────────────────────────────
+// ─── Stats Card Props ─────────────────────────────────────────────────────────
 export interface StatsCardProps {
   title: string;
   value: string | number;
@@ -285,6 +281,7 @@ export interface StatsCardProps {
   className?: string;
 }
 
+// ─── Stats Card ───────────────────────────────────────────────────────────────
 export const StatsCard = ({
   title,
   value,
@@ -297,16 +294,16 @@ export const StatsCard = ({
   const isPositive = change !== undefined && change >= 0;
 
   return (
-    <Card
-      className={cn('group', className)}
-      hoverable
-      animate
-    >
+    <Card className={cn('group', className)} hoverable animate>
       <CardContent className="pt-6">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-2xl font-bold text-foreground mt-1">{value}</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              {title}
+            </p>
+            <p className="text-2xl font-bold text-foreground mt-1">
+              {value}
+            </p>
             {change !== undefined && (
               <p
                 className={cn(
@@ -316,7 +313,8 @@ export const StatsCard = ({
               >
                 <span>{isPositive ? '↑' : '↓'}</span>
                 <span>
-                  {Math.abs(change)}% {changeLabel ?? 'vs last month'}
+                  {Math.abs(change)}%{' '}
+                  {changeLabel ?? 'vs last month'}
                 </span>
               </p>
             )}
@@ -324,7 +322,8 @@ export const StatsCard = ({
           {icon && (
             <div
               className={cn(
-                'w-12 h-12 rounded-xl flex items-center justify-center',
+                'w-12 h-12 rounded-xl',
+                'flex items-center justify-center',
                 'transition-transform duration-300 group-hover:scale-110',
                 iconBg,
               )}
