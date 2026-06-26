@@ -8,7 +8,6 @@ import {
 import { Providers } from '@/components/providers/Providers';
 import '@/styles/globals.css';
 
-// ─── Google Fonts ─────────────────────────────────────────────────────────────
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -37,7 +36,6 @@ const notoSansEthiopic = Noto_Sans_Ethiopic({
   weight: ['300', '400', '500', '600', '700', '800', '900'],
 });
 
-// ─── SEO Metadata ─────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
   title: {
     default: 'Yene Delivery | የኔ ዴሊቨሪ — Food Delivery in Ethiopia',
@@ -132,28 +130,12 @@ export const metadata: Metadata = {
     apple: [
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
-    other: [
-      {
-        rel: 'mask-icon',
-        url: '/safari-pinned-tab.svg',
-        color: '#E85D04',
-      },
-    ],
   },
   manifest: '/site.webmanifest',
-  verification: {
-    google: process.env['NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION'] ?? '',
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Yene Delivery',
-  },
   applicationName: 'Yene Delivery',
   referrer: 'origin-when-cross-origin',
 };
 
-// ─── Viewport Config ──────────────────────────────────────────────────────────
 export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#E85D04' },
@@ -167,7 +149,24 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-// ─── Root Layout ──────────────────────────────────────────────────────────────
+const skipLinkClass = [
+  'sr-only',
+  'focus:not-sr-only',
+  'focus:fixed',
+  'focus:top-4',
+  'focus:left-4',
+  'focus:z-50',
+  'focus:px-4',
+  'focus:py-2',
+  'focus:rounded-lg',
+  'focus:bg-primary',
+  'focus:text-primary-foreground',
+  'focus:font-semibold',
+  'focus:text-sm',
+  'focus:shadow-lg',
+  'focus:outline-none',
+].join(' ');
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -181,11 +180,7 @@ export default function RootLayout({
   ].join(' ');
 
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={fontClasses}
-    >
+    <html lang="en" suppressHydrationWarning className={fontClasses}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -194,21 +189,12 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <meta name="msapplication-TileColor" content="#E85D04" />
-        <meta name="msapplication-config" content="/browserconfig.xml" />
       </head>
-      <body
-        className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden"
-      >
+      <body className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden">
         <Providers>
-          {/* Skip to main content — accessibility */}
-          
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-primary focus:text-primary-foreground focus:font-semibold focus:text-sm focus:shadow-lg focus:outline-none"
-          >
+          <a href="#main-content" className={skipLinkClass}>
             Skip to main content
           </a>
-
-          {/* Page Content */}
           <main id="main-content" className="relative">
             {children}
           </main>
