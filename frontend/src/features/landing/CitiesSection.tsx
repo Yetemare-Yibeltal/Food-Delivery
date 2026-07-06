@@ -8,25 +8,22 @@ import { containerVariants, itemVariants } from '@/lib/animations/variants';
 import { ETHIOPIAN_CITIES } from '@yene/shared';
 
 // ─── City Extra Data ──────────────────────────────────────────────────────────
-const cityExtraData: Record
-  string,
-  {
-    emoji: string;
-    image: string;
-    restaurantCount: number;
-    avgDeliveryTime: number;
-    riderCount: number;
-    popularFood: string;
-    popularFoodAm: string;
-    gradient: string;
-    bgGradient: string;
-    description: string;
-    descriptionAm: string;
-  }
-> = {
+interface ICityExtra {
+  emoji: string;
+  restaurantCount: number;
+  avgDeliveryTime: number;
+  riderCount: number;
+  popularFood: string;
+  popularFoodAm: string;
+  gradient: string;
+  bgGradient: string;
+  description: string;
+  descriptionAm: string;
+}
+
+const cityExtraData: { [key: string]: ICityExtra } = {
   addis_ababa: {
     emoji: '🏙️',
-    image: '/images/cities/addis-ababa.jpg',
     restaurantCount: 350,
     avgDeliveryTime: 25,
     riderCount: 600,
@@ -39,7 +36,6 @@ const cityExtraData: Record
   },
   adama: {
     emoji: '🌿',
-    image: '/images/cities/adama.jpg',
     restaurantCount: 85,
     avgDeliveryTime: 28,
     riderCount: 120,
@@ -52,7 +48,6 @@ const cityExtraData: Record
   },
   hawassa: {
     emoji: '🌊',
-    image: '/images/cities/hawassa.jpg',
     restaurantCount: 70,
     avgDeliveryTime: 30,
     riderCount: 95,
@@ -65,7 +60,6 @@ const cityExtraData: Record
   },
   dire_dawa: {
     emoji: '🌵',
-    image: '/images/cities/dire-dawa.jpg',
     restaurantCount: 60,
     avgDeliveryTime: 28,
     riderCount: 80,
@@ -78,7 +72,6 @@ const cityExtraData: Record
   },
   bahir_dar: {
     emoji: '🦅',
-    image: '/images/cities/bahir-dar.jpg',
     restaurantCount: 55,
     avgDeliveryTime: 32,
     riderCount: 75,
@@ -91,7 +84,6 @@ const cityExtraData: Record
   },
   jimma: {
     emoji: '☕',
-    image: '/images/cities/jimma.jpg',
     restaurantCount: 45,
     avgDeliveryTime: 30,
     riderCount: 60,
@@ -106,18 +98,13 @@ const cityExtraData: Record
 
 // ─── City Card Component ──────────────────────────────────────────────────────
 interface CityCardProps {
-  city: typeof ETHIOPIAN_CITIES[0];
+  city: (typeof ETHIOPIAN_CITIES)[0];
   index: number;
   isSelected: boolean;
   onClick: () => void;
 }
 
-const CityCard = ({
-  city,
-  index,
-  isSelected,
-  onClick,
-}: CityCardProps): React.JSX.Element => {
+const CityCard = ({ city, index, isSelected, onClick }: CityCardProps): React.JSX.Element => {
   const extra = cityExtraData[city.id];
   if (!extra) return <div />;
 
@@ -129,48 +116,24 @@ const CityCard = ({
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
       className={cn(
-        'relative group cursor-pointer',
-        'rounded-2xl overflow-hidden',
+        'relative group cursor-pointer rounded-2xl overflow-hidden',
         'border-2 transition-all duration-300',
-        isSelected
-          ? 'border-primary shadow-xl shadow-primary/20'
-          : 'border-border shadow-card hover:border-primary/40 hover:shadow-lg',
+        isSelected ? 'border-primary shadow-xl shadow-primary/20' : 'border-border shadow-card hover:border-primary/40 hover:shadow-lg',
       )}
     >
-      {/* Card Background Gradient */}
-      <div
-        className={cn(
-          'absolute inset-0 bg-gradient-to-br opacity-50',
-          extra.bgGradient,
-        )}
-        aria-hidden="true"
-      />
+      <div className={cn('absolute inset-0 bg-gradient-to-br opacity-50', extra.bgGradient)} aria-hidden="true" />
 
-      {/* Top Section */}
       <div className="relative p-5">
         <div className="flex items-start justify-between mb-4">
-          {/* City Icon & Name */}
           <div className="flex items-center gap-3">
-            <div
-              className={cn(
-                'w-12 h-12 rounded-2xl flex items-center justify-center text-2xl',
-                'bg-card shadow-md',
-                'transition-transform duration-300 group-hover:scale-110',
-              )}
-            >
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl bg-card shadow-md transition-transform duration-300 group-hover:scale-110">
               {extra.emoji}
             </div>
             <div>
-              <h3 className="font-bold text-foreground text-base leading-tight">
-                {city.name}
-              </h3>
-              <p className="text-muted-foreground text-xs font-amharic">
-                {city.nameAm}
-              </p>
+              <h3 className="font-bold text-foreground text-base leading-tight">{city.name}</h3>
+              <p className="text-muted-foreground text-xs font-amharic">{city.nameAm}</p>
             </div>
           </div>
-
-          {/* Active Badge */}
           {city.isActive && (
             <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-success/10 border border-success/20">
               <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" aria-hidden="true" />
@@ -179,7 +142,6 @@ const CityCard = ({
           )}
         </div>
 
-        {/* Stats Row */}
         <div className="grid grid-cols-3 gap-2 mb-4">
           <div className="flex flex-col items-center gap-1 p-2 rounded-xl bg-card/60 backdrop-blur-sm">
             <Store className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
@@ -198,7 +160,6 @@ const CityCard = ({
           </div>
         </div>
 
-        {/* Popular Food */}
         <div className="flex items-center gap-2 p-2 rounded-xl bg-card/60 backdrop-blur-sm mb-3">
           <span className="text-base" aria-hidden="true">🍽️</span>
           <div>
@@ -210,12 +171,8 @@ const CityCard = ({
           </div>
         </div>
 
-        {/* Description */}
-        <p className="text-xs text-muted-foreground leading-relaxed mb-4">
-          {extra.description}
-        </p>
+        <p className="text-xs text-muted-foreground leading-relaxed mb-4">{extra.description}</p>
 
-        {/* CTA Button */}
         <motion.button
           type="button"
           whileHover={{ scale: 1.02 }}
@@ -225,13 +182,8 @@ const CityCard = ({
             window.location.href = `/restaurants?city=${city.id}`;
           }}
           className={cn(
-            'w-full flex items-center justify-center gap-2',
-            'py-2.5 rounded-xl',
-            'text-sm font-semibold',
-            'transition-all duration-300',
-            isSelected
-              ? `bg-gradient-to-r ${extra.gradient} text-white shadow-md`
-              : 'bg-card border border-border text-foreground hover:border-primary/30',
+            'w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300',
+            isSelected ? `bg-gradient-to-r ${extra.gradient} text-white shadow-md` : 'bg-card border border-border text-foreground hover:border-primary/30',
           )}
         >
           <MapPin className="w-3.5 h-3.5" aria-hidden="true" />
@@ -240,16 +192,8 @@ const CityCard = ({
         </motion.button>
       </div>
 
-      {/* Selected Indicator */}
       {isSelected && (
-        <motion.div
-          layoutId="selected-city"
-          className={cn(
-            'absolute bottom-0 left-0 right-0 h-1',
-            `bg-gradient-to-r ${extra.gradient}`,
-          )}
-          aria-hidden="true"
-        />
+        <motion.div layoutId="selected-city" className={cn('absolute bottom-0 left-0 right-0 h-1', `bg-gradient-to-r ${extra.gradient}`)} aria-hidden="true" />
       )}
     </motion.div>
   );
@@ -273,45 +217,24 @@ export const CitiesSection = (): React.JSX.Element => {
 
   const totalStats = React.useMemo(() => {
     return Object.values(cityExtraData).reduce(
-      (acc, city) => ({
-        restaurants: acc.restaurants + city.restaurantCount,
-        riders: acc.riders + city.riderCount,
-      }),
+      (acc, city) => ({ restaurants: acc.restaurants + city.restaurantCount, riders: acc.riders + city.riderCount }),
       { restaurants: 0, riders: 0 },
     );
   }, []);
 
   return (
-    <section
-      ref={ref}
-      className="section bg-background relative overflow-hidden"
-      aria-labelledby="cities-heading"
-    >
-      {/* Background */}
+    <section ref={ref} className="section bg-background relative overflow-hidden" aria-labelledby="cities-heading">
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `linear-gradient(rgba(232,93,4,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(232,93,4,0.05) 1px, transparent 1px)`,
-            backgroundSize: '80px 80px',
-          }}
-        />
+        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(rgba(232,93,4,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(232,93,4,0.05) 1px, transparent 1px)`, backgroundSize: '80px 80px' }} />
       </div>
 
       <div className="container-custom relative z-10">
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={controls}
-          variants={{
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.6 },
-            },
-          }}
+          variants={{ visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
           className="text-center mb-16 space-y-4"
         >
           <div className="flex justify-center">
@@ -321,23 +244,14 @@ export const CitiesSection = (): React.JSX.Element => {
             </span>
           </div>
           <div className="space-y-2">
-            <h2
-              id="cities-heading"
-              className="font-heading font-black text-foreground"
-            >
-              Now Serving{' '}
-              <span className="gradient-text">6 Ethiopian Cities</span>
+            <h2 id="cities-heading" className="font-heading font-black text-foreground">
+              Now Serving <span className="gradient-text">6 Ethiopian Cities</span>
             </h2>
-            <p className="font-amharic text-muted-foreground text-lg">
-              6 የኢትዮጵያ ከተሞችን እናገለግላለን
-            </p>
+            <p className="font-amharic text-muted-foreground text-lg">6 የኢትዮጵያ ከተሞችን እናገለግላለን</p>
           </div>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            From the capital Addis Ababa to the coffee city Jimma — Yene
-            Delivery brings your favorite food to your door across Ethiopia.
+            From the capital Addis Ababa to the coffee city Jimma — Yene Delivery brings your favorite food to your door across Ethiopia.
           </p>
-
-          {/* Overall Stats */}
           <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
             {[
               { value: '6', label: 'Cities', emoji: '🏙️' },
@@ -345,10 +259,7 @@ export const CitiesSection = (): React.JSX.Element => {
               { value: `${totalStats.riders}+`, label: 'Riders', emoji: '🛵' },
               { value: '200K+', label: 'Orders', emoji: '📦' },
             ].map((stat) => (
-              <div
-                key={stat.label}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted border border-border"
-              >
+              <div key={stat.label} className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted border border-border">
                 <span aria-hidden="true">{stat.emoji}</span>
                 <span className="font-black text-foreground">{stat.value}</span>
                 <span className="text-sm text-muted-foreground">{stat.label}</span>
@@ -357,77 +268,39 @@ export const CitiesSection = (): React.JSX.Element => {
           </div>
         </motion.div>
 
-        {/* Cities Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={controls}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
+        <motion.div variants={containerVariants} initial="hidden" animate={controls} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {ETHIOPIAN_CITIES.map((city, index) => (
-            <CityCard
-              key={city.id}
-              city={city}
-              index={index}
-              isSelected={selectedCity === city.id}
-              onClick={() => setSelectedCity(city.id)}
-            />
+            <CityCard key={city.id} city={city} index={index} isSelected={selectedCity === city.id} onClick={() => setSelectedCity(city.id)} />
           ))}
         </motion.div>
 
-        {/* Selected City Detail Banner */}
         {selectedCityData && selectedExtra && (
           <motion.div
             key={selectedCity}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className={cn(
-              'mt-8 p-6 rounded-2xl',
-              'bg-card border border-border',
-              'shadow-lg',
-              'flex flex-col sm:flex-row items-start sm:items-center gap-4',
-            )}
+            className="mt-8 p-6 rounded-2xl bg-card border border-border shadow-lg flex flex-col sm:flex-row items-start sm:items-center gap-4"
           >
             <div className="flex items-center gap-4">
-              <div
-                className={cn(
-                  'w-14 h-14 rounded-2xl flex items-center justify-center text-3xl',
-                  'shadow-md shrink-0',
-                  `bg-gradient-to-br ${selectedExtra.gradient}`,
-                )}
-              >
+              <div className={cn('w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-md shrink-0', `bg-gradient-to-br ${selectedExtra.gradient}`)}>
                 {selectedExtra.emoji}
               </div>
               <div>
                 <h3 className="font-bold text-foreground text-lg">
                   {selectedCityData.name}
-                  <span className="font-amharic text-muted-foreground text-sm ml-2">
-                    {selectedCityData.nameAm}
-                  </span>
+                  <span className="font-amharic text-muted-foreground text-sm ml-2">{selectedCityData.nameAm}</span>
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  {selectedExtra.description}
-                </p>
-                <p className="text-xs font-amharic text-muted-foreground mt-0.5">
-                  {selectedExtra.descriptionAm}
-                </p>
+                <p className="text-sm text-muted-foreground">{selectedExtra.description}</p>
+                <p className="text-xs font-amharic text-muted-foreground mt-0.5">{selectedExtra.descriptionAm}</p>
               </div>
             </div>
             <motion.button
               type="button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                window.location.href = `/restaurants?city=${selectedCity}`;
-              }}
-              className={cn(
-                'sm:ml-auto shrink-0',
-                'flex items-center gap-2 px-6 py-3 rounded-xl',
-                'text-sm font-semibold text-white',
-                `bg-gradient-to-r ${selectedExtra.gradient}`,
-                'shadow-md hover:shadow-lg transition-shadow duration-300',
-              )}
+              onClick={() => { window.location.href = `/restaurants?city=${selectedCity}`; }}
+              className={cn('sm:ml-auto shrink-0 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white shadow-md hover:shadow-lg transition-shadow duration-300', `bg-gradient-to-r ${selectedExtra.gradient}`)}
             >
               <MapPin className="w-4 h-4" aria-hidden="true" />
               Explore {selectedCityData.name}
@@ -436,37 +309,18 @@ export const CitiesSection = (): React.JSX.Element => {
           </motion.div>
         )}
 
-        {/* Coming Soon Banner */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={controls}
-          variants={{
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.6, delay: 0.8 },
-            },
-          }}
-          className={cn(
-            'mt-6 p-4 rounded-xl',
-            'bg-muted/50 border border-border border-dashed',
-            'flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left',
-          )}
+          variants={{ visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.8 } } }}
+          className="mt-6 p-4 rounded-xl bg-muted/50 border border-border border-dashed flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left"
         >
           <span className="text-2xl" aria-hidden="true">🚀</span>
           <div>
-            <p className="font-semibold text-foreground text-sm">
-              More cities coming soon!
-            </p>
-            <p className="text-xs text-muted-foreground">
-              We are expanding to Mekelle, Gondar, Dessie, Nekemte and more
-              Ethiopian cities in 2025.
-            </p>
+            <p className="font-semibold text-foreground text-sm">More cities coming soon!</p>
+            <p className="text-xs text-muted-foreground">We are expanding to Mekelle, Gondar, Dessie, Nekemte and more Ethiopian cities in 2025.</p>
           </div>
-          <button
-            type="button"
-            className="sm:ml-auto text-xs font-semibold text-primary hover:underline shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
-          >
+          <button type="button" className="sm:ml-auto text-xs font-semibold text-primary hover:underline shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">
             Get notified →
           </button>
         </motion.div>
