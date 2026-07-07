@@ -4,22 +4,22 @@ import * as React from 'react';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/Toast';
 
-// ─── App Providers ────────────────────────────────────────────────────────────
-// All client-side providers are wrapped here to keep layout.tsx
-// as a pure server component as required by Next.js 15 App Router
-export function Providers({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.JSX.Element {
+export function Providers({ children }: { children: React.ReactNode }): React.JSX.Element {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem={true}
-      disableTransitionOnChange={false}
+      defaultTheme="dark"
+      enableSystem={false}
       storageKey="yene-delivery-theme"
     >
+      {/* Animated Background Orbs */}
+      <div className="orb-container" aria-hidden="true">
+        <div className="orb orb-1" />
+        <div className="orb orb-2" />
+        <div className="orb orb-3" />
+        <div className="orb orb-4" />
+        <div className="orb orb-5" />
+      </div>
       {children}
       <Toaster position="top-right" />
     </ThemeProvider>
