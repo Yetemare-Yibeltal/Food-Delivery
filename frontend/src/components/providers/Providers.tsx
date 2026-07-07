@@ -10,9 +10,9 @@ export function Providers({ children }: { children: React.ReactNode }): React.JS
       attribute="class"
       defaultTheme="dark"
       enableSystem={false}
+      forcedTheme="dark"
       storageKey="yene-delivery-theme"
     >
-      {/* Animated Background Orbs */}
       <div className="orb-container" aria-hidden="true">
         <div className="orb orb-1" />
         <div className="orb orb-2" />
