@@ -82,6 +82,17 @@ export const dateOfBirthValidator = z
     { message: 'You must be at least 16 years old to register' },
   );
 
+// ─── OTP Purpose ──────────────────────────────────────────────────────────────
+// Defined separately to avoid Zod conflict between required_error and errorMap
+const otpPurposeValues = [
+  'email_verification',
+  'phone_verification',
+  'password_reset',
+  'two_factor_auth',
+] as const;
+
+const otpPurposeEnum = z.enum(otpPurposeValues);
+
 // ─── Register Schema ──────────────────────────────────────────────────────────
 export const RegisterSchema = z
   .object({
@@ -125,12 +136,7 @@ export const LoginSchema = z.object({
   password: z.string({ required_error: 'Password is required' }).min(1, 'Password is required'),
   rememberMe: z.boolean().optional().default(false),
   deviceToken: z.string().max(500, 'Invalid device token').optional(),
-  platform: z
-    .enum(['web', 'android', 'ios'], {
-      errorMap: () => ({ message: 'Invalid platform' }),
-    })
-    .optional()
-    .default('web'),
+  platform: z.enum(['web', 'android', 'ios']).optional().default('web'),
 });
 
 // ─── Forgot Password Schema ───────────────────────────────────────────────────
@@ -142,25 +148,13 @@ export const ForgotPasswordSchema = z.object({
 export const VerifyOtpSchema = z.object({
   email: emailValidator,
   otp: otpValidator,
-  purpose: z.enum(
-    ['email_verification', 'phone_verification', 'password_reset', 'two_factor_auth'],
-    {
-      required_error: 'OTP purpose is required',
-      errorMap: () => ({ message: 'Invalid OTP purpose' }),
-    },
-  ),
+  purpose: otpPurposeEnum,
 });
 
 // ─── Resend OTP Schema ────────────────────────────────────────────────────────
 export const ResendOtpSchema = z.object({
   email: emailValidator,
-  purpose: z.enum(
-    ['email_verification', 'phone_verification', 'password_reset', 'two_factor_auth'],
-    {
-      required_error: 'OTP purpose is required',
-      errorMap: () => ({ message: 'Invalid OTP purpose' }),
-    },
-  ),
+  purpose: otpPurposeEnum,
 });
 
 // ─── Reset Password Schema ────────────────────────────────────────────────────
@@ -227,15 +221,12 @@ export const UpdateProfileSchema = z
       data.phone !== undefined ||
       data.gender !== undefined ||
       data.dateOfBirth !== undefined,
-    {
-      message: 'At least one field must be provided to update profile',
-    },
+    { message: 'At least one field must be provided to update profile' },
   );
 
 // ─── Add Address Schema ───────────────────────────────────────────────────────
 export const AddAddressSchema = z.object({
   label: z.nativeEnum(AddressLabel, {
-    required_error: 'Address label is required',
     errorMap: () => ({ message: 'Invalid address label' }),
   }),
   customLabel: z.string().max(30, 'Custom label must be at most 30 characters').optional(),
@@ -352,7 +343,6 @@ export const DeviceTokenSchema = z.object({
     .min(1, 'Device token is required')
     .max(500, 'Invalid device token'),
   platform: z.enum(['web', 'android', 'ios'], {
-    required_error: 'Platform is required',
     errorMap: () => ({ message: 'Invalid platform' }),
   }),
 });
