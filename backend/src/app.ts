@@ -126,7 +126,9 @@ app.get('/api/v1', (_req: Request, res: Response) => {
 });
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
-// Routes will be mounted here as we build each module
+// Routes will be mounted here as we build each module// ─── API Routes ───────────────────────────────────────────────────────────────
+import authRoutes from './modules/auth/auth.routes';
+app.use('/api/v1/auth', authRoutes);
 // Example:
 // import authRoutes from './modules/auth/auth.routes';
 // app.use('/api/v1/auth', authRoutes);
