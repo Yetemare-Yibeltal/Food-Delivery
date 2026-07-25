@@ -9,11 +9,14 @@ import { errorHandler, notFoundHandler } from './shared/middleware/errorHandler'
 import { generalLimiter } from './shared/middleware/rateLimiter';
 import { HTTP_STATUS, APP_INFO } from '@yene/shared';
 
+// ─── Route Imports ────────────────────────────────────────────────────────────
+import authRoutes from './modules/auth/auth.routes';
+import restaurantRoutes from './modules/restaurants/restaurant.routes';
+
 // ─── Create Express App ───────────────────────────────────────────────────────
 const app: Application = express();
 
 // ─── Trust Proxy ─────────────────────────────────────────────────────────────
-// Required for rate limiting and IP detection behind reverse proxy (Nginx)
 app.set('trust proxy', 1);
 
 // ─── Security Middleware ──────────────────────────────────────────────────────
@@ -43,7 +46,6 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, Postman, curl)
       if (!origin) {
         callback(null, true);
         return;
@@ -66,7 +68,7 @@ app.use(
       'X-CSRF-Token',
     ],
     exposedHeaders: ['X-Total-Count', 'X-Page', 'X-Limit'],
-    maxAge: 86400, // 24 hours preflight cache
+    maxAge: 86400,
   }),
 );
 
@@ -126,15 +128,8 @@ app.get('/api/v1', (_req: Request, res: Response) => {
 });
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
-// Routes will be mounted here as we build each module// ─── API Routes ───────────────────────────────────────────────────────────────
-import authRoutes from './modules/auth/auth.routes';
 app.use('/api/v1/auth', authRoutes);
-// Example:
-// import authRoutes from './modules/auth/auth.routes';
-// app.use('/api/v1/auth', authRoutes);
-//
-// We will add routes one by one as we build each module
-// For now the app is ready to accept route registrations
+app.use('/api/v1/restaurants', restaurantRoutes);
 
 // ─── 404 Handler ─────────────────────────────────────────────────────────────
 app.use(notFoundHandler);
