@@ -12,6 +12,7 @@ import { HTTP_STATUS, APP_INFO } from '@yene/shared';
 // ─── Route Imports ────────────────────────────────────────────────────────────
 import authRoutes from './modules/auth/auth.routes';
 import restaurantRoutes from './modules/restaurants/restaurant.routes';
+import cartRoutes from './modules/cart/cart.routes';
 
 // ─── Create Express App ───────────────────────────────────────────────────────
 const app: Application = express();
@@ -42,7 +43,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
 ];
-
+app.use('/api/v1/cart', cartRoutes);
 app.use(
   cors({
     origin: (origin, callback) => {
