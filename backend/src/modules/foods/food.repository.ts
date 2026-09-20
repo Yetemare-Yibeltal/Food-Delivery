@@ -68,7 +68,7 @@ export class FoodRepository {
         newest: { createdAt: -1 },
       };
 
-      const sort = sortOptions[sortBy] ?? { sortOrder: 1 };
+      const sort = sortOptions[sortBy] ?? { totalOrders: -1 };
       const skip = (page - 1) * limit;
 
       const [foods, total] = await Promise.all([
