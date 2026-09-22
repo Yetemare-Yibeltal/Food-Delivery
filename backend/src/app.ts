@@ -43,7 +43,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
 ];
-app.use('/api/v1/cart', cartRoutes);
+app.use('/api/v1/cart', cartRoutes); 
 app.use(
   cors({
     origin: (origin, callback) => {
