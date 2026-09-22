@@ -219,12 +219,8 @@ export const getNearbyRestaurantsApi = async (
 };
 
 // ─── Get My Restaurant ────────────────────────────────────────────────────────
-export const getMyRestaurantApi = async (): Promise
-  IApiResponse<IRestaurant>
-> => {
-  const response = await api.get<IApiResponse<IRestaurant>>(
-    ENDPOINTS.RESTAURANTS.MY_RESTAURANT,
-  );
+export const getMyRestaurantApi = async (): Promise<IApiResponse<IRestaurant>> => {
+  const response = await api.get<IApiResponse<IRestaurant>>(ENDPOINTS.RESTAURANTS.MY_RESTAURANT);
   return response.data;
 };
 
